@@ -1,5 +1,6 @@
-com/coviam/EmployeeRelationshipService.class
+com/coviam/dao/EmployeeDao.class
 com/coviam/model/Employee.class
+com/coviam/service/EmployeeRelationshipService.class
 com/coviam/model/Employee$EmployeeBuilder.class
 Application.class
 com/coviam/controller/EmployeeRelationshipController.class

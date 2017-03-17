@@ -5,6 +5,7 @@ import com.coviam.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@Transactional
 public class EmployeeRelationshipService {
     @Autowired
     private EmployeeDao employeeDao;
@@ -27,7 +29,6 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-
         Employee employee = employeeDao.findOne(id);
 
         if (employee == null) {

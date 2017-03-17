@@ -2,6 +2,7 @@ package com.coviam.model;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.Id;
@@ -20,5 +21,7 @@ public class Employee {
     @Id
     String id;
     String name;
+    @Column(name = "junior_ids")
+    @Singular
     List<String> juniorIds;
 }
