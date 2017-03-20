@@ -27,7 +27,10 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-        Employee employee = employeeRepository.findById(id);
+        Employee employee = employeeRepository.findById(id)
+                .stream()
+                .findFirst()
+                .orElse(null);
 
         if (employee == null) {
             log.warn("No employee with employee Id: {} found", id);
@@ -51,7 +54,11 @@ public class EmployeeRelationshipService {
             List<Employee> newVisitedEmployees = unvisitedEmployee.stream()
                     .map(Employee::getJuniorIds)
                     .flatMap(List::stream)
-                    .map(immediateJuniors -> employeeRepository.findById(immediateJuniors))
+                    .map(immediateJuniors -> employeeRepository
+                            .findById(immediateJuniors)
+                            .stream()
+                            .findFirst()
+                            .orElse(null))
                     .filter(visitedEmployee::contains)
                     .collect(Collectors.toList());
 

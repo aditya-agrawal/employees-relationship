@@ -1,8 +1,7 @@
 package com.coviam.dao;
 
 import com.coviam.model.Employee;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
@@ -10,8 +9,8 @@ import java.util.List;
 /**
  * Created by Aditya
  */
-@Repository
-public interface EmployeeRepository extends CrudRepository<Employee, String> {
-    Employee findById(String id);
+
+public interface EmployeeRepository extends MongoRepository<Employee, String> {
+    List<Employee> findById(String id);
     List<Employee> findByName(String name);
 }
