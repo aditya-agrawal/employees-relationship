@@ -5,12 +5,12 @@ import com.coviam.model.Employee;
 /**
  * Sets data for all the tests.
  */
-class DataSetters {
+public class DataSetters {
     private DataSetters(){
 
     }
 
-    static Employee getEmployee6() {
+    public static Employee getEmployee6() {
         return Employee.builder()
                 .id("6")
                 .name("Employee6")
@@ -19,7 +19,7 @@ class DataSetters {
                 .build();
     }
 
-    static Employee getEmployee5() {
+    public static Employee getEmployee5() {
         return Employee.builder()
                 .id("5")
                 .name("employee5")
@@ -27,7 +27,7 @@ class DataSetters {
                 .build();
     }
 
-    static Employee getEmployee4() {
+    public static Employee getEmployee4() {
         return Employee.builder()
                 .id("4")
                 .name("employee4")
@@ -36,7 +36,7 @@ class DataSetters {
                 .build();
     }
 
-    static Employee getEmployee3() {
+    public static Employee getEmployee3() {
         return Employee.builder()
                 .id("3")
                 .name("employee3")
@@ -46,7 +46,7 @@ class DataSetters {
                 .build();
     }
 
-    static Employee getEmployee2() {
+    public static Employee getEmployee2() {
         return Employee.builder()
                 .id("2")
                 .name("employee2")
@@ -56,7 +56,7 @@ class DataSetters {
                 .build();
     }
 
-    static Employee getEmployee1() {
+    public static Employee getEmployee1() {
         return Employee.builder()
                 .id("1")
                 .name("employee1")

@@ -1,11 +1,10 @@
 package com.coviam.service;
 
-import com.coviam.dao.EmployeeDao;
+import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,10 +16,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@Transactional
 public class EmployeeRelationshipService {
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeRepository employeeRepository;
 
     /**
      * return empty list if no employee found for given Id else do bfs traversal to get the list of Juniors.
@@ -29,7 +27,7 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-        Employee employee = employeeDao.findOne(id);
+        Employee employee = employeeRepository.findById(id);
 
         if (employee == null) {
             log.warn("No employee with employee Id: {} found", id);
@@ -53,7 +51,7 @@ public class EmployeeRelationshipService {
             List<Employee> newVisitedEmployees = unvisitedEmployee.stream()
                     .map(Employee::getJuniorIds)
                     .flatMap(List::stream)
-                    .map(immediateJuniors -> employeeDao.findOne(immediateJuniors))
+                    .map(immediateJuniors -> employeeRepository.findById(immediateJuniors))
                     .filter(visitedEmployee::contains)
                     .collect(Collectors.toList());
 

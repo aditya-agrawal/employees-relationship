@@ -1,6 +1,6 @@
 package com.coviam.controller;
 
-import com.coviam.dao.EmployeeDao;
+import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
 import com.coviam.service.EmployeeRelationshipService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class EmployeeRelationshipController {
     @Autowired
     private EmployeeRelationshipService employeeRelationshipService;
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeRepository employeeRepository;
 
     /**
      * @param id employee Id
@@ -41,6 +41,6 @@ public class EmployeeRelationshipController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public void registerEmployee(@RequestBody Employee employeeDetails) {
         log.info("Employee with id: {} is registered", employeeDetails.getId());
-        employeeDao.save(employeeDetails);
+        employeeRepository.save(employeeDetails);
     }
 }

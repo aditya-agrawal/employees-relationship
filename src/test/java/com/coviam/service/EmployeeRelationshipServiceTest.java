@@ -1,7 +1,7 @@
 package com.coviam.service;
 
 
-import com.coviam.dao.EmployeeDao;
+import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EmployeeRelationshipServiceTest {
     @Mock
-    private EmployeeDao employeeDao;
+    private EmployeeRepository employeeRepository;
     @InjectMocks
     private EmployeeRelationshipService employeeRelationshipService;
 
@@ -35,12 +35,12 @@ public class EmployeeRelationshipServiceTest {
 
     @Before
     public void setUp() {
-        when(employeeDao.findOne("id1")).thenReturn(employee1);
-        when(employeeDao.findOne("id2")).thenReturn(employee2);
-        when(employeeDao.findOne("id3")).thenReturn(employee3);
-        when(employeeDao.findOne("id4")).thenReturn(employee4);
-        when(employeeDao.findOne("id5")).thenReturn(employee5);
-        when(employeeDao.findOne("id6")).thenReturn(employee6);
+        when(employeeRepository.findOne("id1")).thenReturn(employee1);
+        when(employeeRepository.findOne("id2")).thenReturn(employee2);
+        when(employeeRepository.findOne("id3")).thenReturn(employee3);
+        when(employeeRepository.findOne("id4")).thenReturn(employee4);
+        when(employeeRepository.findOne("id5")).thenReturn(employee5);
+        when(employeeRepository.findOne("id6")).thenReturn(employee6);
     }
 
     @Test
