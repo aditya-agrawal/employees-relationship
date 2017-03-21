@@ -52,7 +52,7 @@ public class EmployeeRelationshipService {
 
         while (!unvisitedEmployee.isEmpty()) {
             List<Employee> newVisitedEmployees = unvisitedEmployee.stream()
-                    .map(Employee::getJuniorIds)
+                    .map(Employee::getJuniors)
                     .flatMap(List::stream)
                     .map(immediateJuniors -> employeeRepository
                             .findById(immediateJuniors)

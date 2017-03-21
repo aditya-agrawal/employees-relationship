@@ -19,7 +19,7 @@ public class Employee {
     String id;
     String name;
     @ElementCollection(targetClass = String.class)
-    @Column(name = "junior_ids")
+    @Column(name = "juniors")
     @Singular
-    List<String> juniorIds;
+    List<String> juniors;
 }
