@@ -17,7 +17,9 @@ import java.util.List;
 public class Employee {
     @Id
     String id;
+
     String name;
+
     @ElementCollection(targetClass = String.class)
     @Column(name = "juniors")
     @Singular

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Aditya.
@@ -27,16 +29,13 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-        Employee employee = employeeRepository.findById(id)
-                .stream()
-                .findFirst()
-                .orElse(null);
+        Optional<Employee> employee = employeeRepository.findById(id);
 
-        if (employee == null) {
+        if (!employee.isPresent()) {
             log.warn("No employee with employee Id: {} found", id);
             return Collections.emptyList();
         } else {
-            return bfsTraversal(employee);
+            return bfsTraversal(employee.get());
         }
     }
 
@@ -51,20 +50,42 @@ public class EmployeeRelationshipService {
         List<Employee> visitedEmployee = new LinkedList<>();
 
         while (!unvisitedEmployee.isEmpty()) {
-            List<Employee> newVisitedEmployees = unvisitedEmployee.stream()
-                    .map(Employee::getJuniors)
+            List<Employee> newVisitedEmployees = unvisitedEmployee
+                    .stream()
+                    .map(this::getJuniorEmployeeList)
                     .flatMap(List::stream)
-                    .map(immediateJuniors -> employeeRepository
-                            .findById(immediateJuniors)
-                            .stream()
-                            .findFirst()
-                            .orElse(null))
-                    .filter(visitedEmployee::contains)
+                    .filter((o) -> !visitedEmployee.contains(o))
                     .collect(Collectors.toList());
 
             visitedEmployee.addAll(newVisitedEmployees);
             unvisitedEmployee = newVisitedEmployees;
         }
+
+        //add itself to the start of the list.
+        visitedEmployee.add(0, employee);
+
         return visitedEmployee;
     }
+
+    /**
+     * gets the list of junior employees.
+     * @param employee employee for which juniors needs to be found.
+     * @return list of immediate juniors.
+     */
+    private List<Employee> getJuniorEmployeeList(Employee employee) {
+        return employee.getJuniorIds()
+                .stream()
+                .flatMap(id -> streamopt(employeeRepository.findById(id)))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Turns an Optional<T> into a Stream<T> of length zero or one depending upon
+     * whether a value is present.
+     */
+    static <T> Stream<T> streamopt(Optional<T> opt) {
+        return opt.map(Stream::of)
+                .orElseGet(Stream::empty);
+    }
+
 }
