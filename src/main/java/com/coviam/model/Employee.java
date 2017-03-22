@@ -1,8 +1,14 @@
 package com.coviam.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -20,8 +26,7 @@ public class Employee {
 
     String name;
 
-    @Column(name = "junior_ids")
-    @ElementCollection(targetClass = String.class)
-    @Singular
-    List<String> juniorIds;
+    @OneToMany
+    List<Employee> juniors;
+
 }
