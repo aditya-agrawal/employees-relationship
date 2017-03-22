@@ -27,10 +27,7 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-        Employee employee = employeeRepository.findById(id)
-                .stream()
-                .findFirst()
-                .orElse(null);
+        Employee employee = employeeRepository.findById(id);
 
         if (employee == null) {
             log.warn("No employee with employee Id: {} found", id);
@@ -51,20 +48,31 @@ public class EmployeeRelationshipService {
         List<Employee> visitedEmployee = new LinkedList<>();
 
         while (!unvisitedEmployee.isEmpty()) {
-            List<Employee> newVisitedEmployees = unvisitedEmployee.stream()
-                    .map(Employee::getJuniorIds)
+            List<Employee> newVisitedEmployees = unvisitedEmployee
+                    .stream()
+                    .map(this::getJuniorEmployeeList)
                     .flatMap(List::stream)
-                    .map(immediateJuniors -> employeeRepository
-                            .findById(immediateJuniors)
-                            .stream()
-                            .findFirst()
-                            .orElse(null))
-                    .filter(visitedEmployee::contains)
+                    .filter((o) -> !visitedEmployee.contains(o))
                     .collect(Collectors.toList());
 
             visitedEmployee.addAll(newVisitedEmployees);
             unvisitedEmployee = newVisitedEmployees;
         }
+
+        //add itself to the start of the list.
+        visitedEmployee.add(0,employee);
+
         return visitedEmployee;
+    }
+
+    private List<Employee> getJuniorEmployeeList(Employee employee1) {
+        if (employee1 == null){
+            return Collections.emptyList();
+        }
+
+        return employee1.getJuniorIds()
+                .stream()
+                .map(id -> employeeRepository.findById(id))
+                .collect(Collectors.toList());
     }
 }

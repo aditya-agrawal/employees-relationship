@@ -39,8 +39,9 @@ public class EmployeeRelationshipController {
      * @param employeeDetails employee details
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public void registerEmployee(@RequestBody Employee employeeDetails) {
+    public ResponseEntity<?> registerEmployee(@RequestBody Employee employeeDetails) {
         log.info("Employee with id: {} is registered", employeeDetails.getId());
         employeeRepository.save(employeeDetails);
+        return ResponseEntity.ok().build();
     }
 }

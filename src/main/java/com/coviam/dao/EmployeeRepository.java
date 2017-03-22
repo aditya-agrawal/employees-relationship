@@ -11,6 +11,6 @@ import java.util.List;
  */
 
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
-    List<Employee> findById(String id);
+    Employee findById(String id);
     List<Employee> findByName(String name);
 }

@@ -18,7 +18,9 @@ import java.util.List;
 public class Employee {
     @Id
     String id;
+
     String name;
+
     @Column(name = "junior_ids")
     @Singular
     List<String> juniorIds;
