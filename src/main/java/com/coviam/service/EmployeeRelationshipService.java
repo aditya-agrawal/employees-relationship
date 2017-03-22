@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Aditya.
@@ -27,13 +29,13 @@ public class EmployeeRelationshipService {
      * @return list of juniors
      */
     public List<Employee> getEmployeeList(String id) {
-        Employee employee = employeeRepository.findById(id);
+        Optional<Employee> employee = employeeRepository.findById(id);
 
-        if (employee == null) {
+        if (!employee.isPresent()) {
             log.warn("No employee with employee Id: {} found", id);
             return Collections.emptyList();
         } else {
-            return bfsTraversal(employee);
+            return bfsTraversal(employee.get());
         }
     }
 
@@ -60,19 +62,30 @@ public class EmployeeRelationshipService {
         }
 
         //add itself to the start of the list.
-        visitedEmployee.add(0,employee);
+        visitedEmployee.add(0, employee);
 
         return visitedEmployee;
     }
 
-    private List<Employee> getJuniorEmployeeList(Employee employee1) {
-        if (employee1 == null){
-            return Collections.emptyList();
-        }
-
-        return employee1.getJuniorIds()
+    /**
+     * gets the list of junior employees.
+     * @param employee employee for which juniors needs to be found.
+     * @return list of immediate juniors.
+     */
+    private List<Employee> getJuniorEmployeeList(Employee employee) {
+        return employee.getJuniorIds()
                 .stream()
-                .map(id -> employeeRepository.findById(id))
+                .flatMap(id -> streamopt(employeeRepository.findById(id)))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Turns an Optional<T> into a Stream<T> of length zero or one depending upon
+     * whether a value is present.
+     */
+    static <T> Stream<T> streamopt(Optional<T> opt) {
+        return opt.map(Stream::of)
+                .orElseGet(Stream::empty);
+    }
+
 }
