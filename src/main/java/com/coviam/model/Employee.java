@@ -22,6 +22,5 @@ public class Employee {
     String name;
 
     @Column(name = "junior_ids")
-    @Singular
     List<String> juniorIds;
 }
