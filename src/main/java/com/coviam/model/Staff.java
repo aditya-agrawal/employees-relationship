@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -17,13 +18,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
-public class Employee {
+@Entity
+@Table(name = "staff")
+public class Staff {
     @Id
     String id;
 
     String name;
 
-    @Column(name = "junior_ids")
-    List<String> juniorIds;
+    @OneToMany
+    List<Staff> subordinate;
 }
