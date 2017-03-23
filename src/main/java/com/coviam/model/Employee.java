@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -18,12 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
+@Entity
+@Table(name = "employees")
 public class Employee {
     @Id
     String id;
 
     String name;
 
+    @ElementCollection(targetClass = String.class)
     @Column(name = "junior_ids")
     List<String> juniorIds;
 }
