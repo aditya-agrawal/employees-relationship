@@ -3,6 +3,7 @@ package com.coviam.dao;
 import com.coviam.model.Employee;
 import org.springframework.data.repository.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -12,5 +13,6 @@ import java.util.Optional;
 @org.springframework.stereotype.Repository
 public interface EmployeeRepository extends Repository<Employee,String> {
     Optional<Employee> findById(String id);
-    Employee save(Employee entity);
+    List<Employee> findByManagerId(String managerId);
+    List<Employee> save(Employee entity);
 }

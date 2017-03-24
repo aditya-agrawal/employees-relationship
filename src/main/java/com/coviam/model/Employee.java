@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by Aditya.
@@ -25,7 +25,8 @@ public class Employee {
 
     String name;
 
-    @ElementCollection(targetClass = String.class)
-    @Column(name = "junior_ids")
-    List<String> juniorIds;
+    @DBRef
+    @JoinColumn(name = "employee_id")
+    @ManyToOne
+    Employee manager;
 }

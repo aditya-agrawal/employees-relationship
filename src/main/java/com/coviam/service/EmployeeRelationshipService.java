@@ -2,16 +2,13 @@ package com.coviam.service;
 
 import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
+import com.coviam.model.EmployeeUIModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Aditya.
@@ -28,64 +25,48 @@ public class EmployeeRelationshipService {
      * @param id Employee Id whoes juniors are needed to be found.
      * @return list of juniors
      */
-    public List<Employee> getEmployeeList(String id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
+    public List<EmployeeUIModel> getEmployeeList(String id) {
+        //adds immediate juniors
+        List<EmployeeUIModel> employeeUIModels = employeeRepository.findByManagerId(id)
+                .stream()
+                .map(this::toUIModel)
+                .collect(Collectors.toList());
 
-        if (!employee.isPresent()) {
-            log.warn("No employee with employee Id: {} found", id);
-            return Collections.emptyList();
-        } else {
-            return bfsTraversal(employee.get());
-        }
-    }
-
-    /**
-     * BFS traversal for getting list of all the employee down in hierarchy.
-     *
-     * @param employee employee on the top of the hierarchy.
-     * @return list of employees.
-     */
-    private List<Employee> bfsTraversal(Employee employee) {
-        List<Employee> unvisitedEmployee = Collections.singletonList(employee);
-        List<Employee> visitedEmployee = new LinkedList<>();
-
-        while (!unvisitedEmployee.isEmpty()) {
-            List<Employee> newVisitedEmployees = unvisitedEmployee
+        //add other subordinates
+        List<EmployeeUIModel> subordinates = employeeUIModels;
+        while (!subordinates.isEmpty()) {
+            subordinates = subordinates
                     .stream()
-                    .map(this::getJuniorEmployeeList)
+                    .map(employee -> employeeRepository.findByManagerId(employee.getId()))
                     .flatMap(List::stream)
-                    .filter((o) -> !visitedEmployee.contains(o))
+                    .map(this::toUIModel)
                     .collect(Collectors.toList());
 
-            visitedEmployee.addAll(newVisitedEmployees);
-            unvisitedEmployee = newVisitedEmployees;
+            employeeUIModels.addAll(subordinates);
         }
 
-        //add itself to the start of the list.
-        visitedEmployee.add(0, employee);
+        // adds itself into the list
+        employeeRepository.findById(id)
+                .map(this::toUIModel)
+                .ifPresent(employeeUIModels::add);
 
-        return visitedEmployee;
+        return employeeUIModels;
     }
 
-    /**
-     * gets the list of junior employees.
-     * @param employee employee for which juniors needs to be found.
-     * @return list of immediate juniors.
-     */
-    private List<Employee> getJuniorEmployeeList(Employee employee) {
-        return employee.getJuniorIds()
-                .stream()
-                .flatMap(id -> streamopt(employeeRepository.findById(id)))
-                .collect(Collectors.toList());
+    private EmployeeUIModel toUIModel(Employee employee) {
+        return EmployeeUIModel.builder()
+                .id(employee.getId())
+                .name(employee.getName())
+                .managerId(getManagerIdIfPresent(employee))
+                .build();
     }
 
-    /**
-     * Turns an Optional<T> into a Stream<T> of length zero or one depending upon
-     * whether a value is present.
-     */
-    static <T> Stream<T> streamopt(Optional<T> opt) {
-        return opt.map(Stream::of)
-                .orElseGet(Stream::empty);
+    private String getManagerIdIfPresent(Employee employee) {
+        Employee manager = employee.getManager();
+        if (manager != null) {
+            return manager.getId();
+        } else {
+            return null;
+        }
     }
-
 }
