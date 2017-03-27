@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Aditya.
@@ -19,7 +21,9 @@ import javax.persistence.*;
 @Document
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee extends JdkSerializationRedisSerializer implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     String id;
 
