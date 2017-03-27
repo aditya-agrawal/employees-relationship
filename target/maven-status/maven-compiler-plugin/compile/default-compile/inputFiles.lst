@@ -2,6 +2,7 @@
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/model/Employee.java
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/dao/EmployeeRepository.java
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/Application.java
+/Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/config/RedisConfig.java
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/service/EmployeeRelationshipService.java
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/config/JpaConfig.java
 /Users/adityaagrawal/IdeaProjects/EmployeesRelationship/src/main/java/com/coviam/config/MongoConfig.java

@@ -2,6 +2,7 @@ com/coviam/model/EmployeeUIModel.class
 com/coviam/model/Employee.class
 com/coviam/dao/EmployeeRepository.class
 com/coviam/model/Employee$EmployeeBuilder.class
+com/coviam/config/RedisConfig.class
 com/coviam/config/JpaConfig.class
 com/coviam/config/MongoConfig.class
 com/coviam/model/EmployeeUIModel$EmployeeUIModelBuilder.class
