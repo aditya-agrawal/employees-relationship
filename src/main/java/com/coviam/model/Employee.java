@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,8 +20,7 @@ import java.io.Serializable;
 @Document
 @Entity
 @Table(name = "employees")
-public class Employee extends JdkSerializationRedisSerializer implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Employee implements Serializable{
 
     @Id
     String id;
