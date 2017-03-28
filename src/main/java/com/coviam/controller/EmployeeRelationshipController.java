@@ -1,6 +1,5 @@
 package com.coviam.controller;
 
-import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
 import com.coviam.model.EmployeeUIModel;
 import com.coviam.service.EmployeeRelationshipService;
@@ -24,8 +23,6 @@ import java.util.List;
 public class EmployeeRelationshipController {
     @Autowired
     private EmployeeRelationshipService employeeRelationshipService;
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     /**
      * @param id employee Id
@@ -47,7 +44,7 @@ public class EmployeeRelationshipController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseEntity<?> registerEmployee(@RequestBody Employee employeeDetails) {
         log.info("Employee with id: {} is registered", employeeDetails.getId());
-        employeeRepository.save(employeeDetails);
+        employeeRelationshipService.saveDetails(employeeDetails);
         return ResponseEntity.ok().build();
     }
 }

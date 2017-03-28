@@ -3,6 +3,7 @@ package com.coviam.service;
 import com.coviam.dao.EmployeeRepository;
 import com.coviam.model.Employee;
 import com.coviam.model.EmployeeUIModel;
+import com.coviam.util.EmployeeRelationshipUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ import java.util.stream.Collectors;
 public class EmployeeRelationshipService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private Sender sender;
+    @Autowired
+    private Receiver receiver;
 
     /**
      * return empty list if no employee found for given Id else do bfs traversal to get the list of Juniors.
@@ -29,7 +34,7 @@ public class EmployeeRelationshipService {
         //adds immediate juniors
         List<EmployeeUIModel> employeeUIModels = employeeRepository.findByManagerId(id)
                 .stream()
-                .map(this::toUIModel)
+                .map(EmployeeRelationshipUtil::toUIModel)
                 .collect(Collectors.toList());
 
         //add other subordinates
@@ -39,7 +44,7 @@ public class EmployeeRelationshipService {
                     .stream()
                     .map(employee -> employeeRepository.findByManagerId(employee.getId()))
                     .flatMap(List::stream)
-                    .map(this::toUIModel)
+                    .map(EmployeeRelationshipUtil::toUIModel)
                     .collect(Collectors.toList());
 
             employeeUIModels.addAll(subordinates);
@@ -47,26 +52,15 @@ public class EmployeeRelationshipService {
 
         // adds itself into the list
         employeeRepository.findById(id)
-                .map(this::toUIModel)
+                .map(EmployeeRelationshipUtil::toUIModel)
                 .ifPresent(employeeUIModels::add);
 
         return employeeUIModels;
     }
 
-    private EmployeeUIModel toUIModel(Employee employee) {
-        return EmployeeUIModel.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .managerId(getManagerIdIfPresent(employee))
-                .build();
+    public void saveDetails(Employee employeeDetails) {
+        sender.sendMessage("employee.t", employeeDetails.toString());
+        employeeRepository.save(employeeDetails);
     }
 
-    private String getManagerIdIfPresent(Employee employee) {
-        Employee manager = employee.getManager();
-        if (manager != null) {
-            return manager.getId();
-        } else {
-            return null;
-        }
-    }
 }
