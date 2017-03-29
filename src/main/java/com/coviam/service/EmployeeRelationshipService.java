@@ -1,7 +1,7 @@
 package com.coviam.service;
 
+import com.coviam.Util.EmployeeRelationshipUtil;
 import com.coviam.dao.EmployeeRepository;
-import com.coviam.model.Employee;
 import com.coviam.model.EmployeeUIModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class EmployeeRelationshipService {
         //adds immediate juniors
         List<EmployeeUIModel> employeeUIModels = employeeRepository.findByManagerId(id)
                 .stream()
-                .map(this::toUIModel)
+                .map(EmployeeRelationshipUtil::toUIModel)
                 .collect(Collectors.toList());
 
         //add other subordinates
@@ -39,7 +39,7 @@ public class EmployeeRelationshipService {
                     .stream()
                     .map(employee -> employeeRepository.findByManagerId(employee.getId()))
                     .flatMap(List::stream)
-                    .map(this::toUIModel)
+                    .map(EmployeeRelationshipUtil::toUIModel)
                     .collect(Collectors.toList());
 
             employeeUIModels.addAll(subordinates);
@@ -47,26 +47,9 @@ public class EmployeeRelationshipService {
 
         // adds itself into the list
         employeeRepository.findById(id)
-                .map(this::toUIModel)
+                .map(EmployeeRelationshipUtil::toUIModel)
                 .ifPresent(employeeUIModels::add);
 
         return employeeUIModels;
-    }
-
-    private EmployeeUIModel toUIModel(Employee employee) {
-        return EmployeeUIModel.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .managerId(getManagerIdIfPresent(employee))
-                .build();
-    }
-
-    private String getManagerIdIfPresent(Employee employee) {
-        Employee manager = employee.getManager();
-        if (manager != null) {
-            return manager.getId();
-        } else {
-            return null;
-        }
     }
 }
