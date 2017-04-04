@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @Document
 @Entity
 @Table(name = "employees")
+@SolrDocument(solrCoreName = "employee")
 public class Employee implements Serializable{
 
     @Id

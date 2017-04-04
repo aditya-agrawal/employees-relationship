@@ -2,11 +2,13 @@ package com.coviam.service;
 
 import com.coviam.Util.EmployeeRelationshipUtil;
 import com.coviam.dao.EmployeeRepository;
+import com.coviam.model.Employee;
 import com.coviam.model.EmployeeUIModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 public class EmployeeRelationshipService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepositoryCustomImpl employeeRepositoryCustomIml;
 
     /**
      * return empty list if no employee found for given Id else do bfs traversal to get the list of Juniors.
@@ -31,6 +35,11 @@ public class EmployeeRelationshipService {
                 .stream()
                 .map(EmployeeRelationshipUtil::toUIModel)
                 .collect(Collectors.toList());
+
+        Employee employee1 = Employee.builder()
+                .id("id")
+                .name("name")
+                .build();
 
         //add other subordinates
         List<EmployeeUIModel> subordinates = employeeUIModels;
@@ -52,4 +61,12 @@ public class EmployeeRelationshipService {
 
         return employeeUIModels;
     }
+
+    public List<Employee> getQueryResult(){
+        List<Employee> employeesList = new ArrayList<>();
+        employeeRepositoryCustomIml.findAllUsingCursor()
+                .forEachRemaining(employeesList::add);
+        return employeesList;
+    }
+
 }
