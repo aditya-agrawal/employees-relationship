@@ -36,11 +36,6 @@ public class EmployeeRelationshipService {
                 .map(EmployeeRelationshipUtil::toUIModel)
                 .collect(Collectors.toList());
 
-        Employee employee1 = Employee.builder()
-                .id("id")
-                .name("name")
-                .build();
-
         //add other subordinates
         List<EmployeeUIModel> subordinates = employeeUIModels;
         while (!subordinates.isEmpty()) {
