@@ -2,12 +2,14 @@ package com.coviam.Util;
 
 import com.coviam.model.Employee;
 import com.coviam.model.EmployeeUIModel;
+import lombok.experimental.UtilityClass;
 
 /**
  * Created by Aditya.
  */
+@UtilityClass
 public class EmployeeRelationshipUtil {
-    public static EmployeeUIModel toUIModel(Employee employee) {
+    public EmployeeUIModel toUIModel(Employee employee) {
         return EmployeeUIModel.builder()
                 .id(employee.getId())
                 .name(employee.getName())
@@ -15,7 +17,7 @@ public class EmployeeRelationshipUtil {
                 .build();
     }
 
-    private static String getManagerIdIfPresent(Employee employee) {
+    private String getManagerIdIfPresent(Employee employee) {
         Employee manager = employee.getManager();
         if (manager != null) {
             return manager.getId();
